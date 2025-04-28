@@ -1,0 +1,45 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"heading": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "heading1",
+						"content": {
+							"text": "Brief"
+						}
+					}
+				]
+			},
+			"subheading": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Reprehenderit cupidatat do deserunt quis voluptate tempor dolor ullamco nisi aute duis. Culpa laboris consequat Lorem dolore sit consequat dolor occaecat eiusmod consequat dolore sint. Qui pariatur sit dolor qui et reprehenderit consequat fugiat dolor id elit tempor."
+						}
+					}
+				]
+			},
+			"button_text": {
+				"__TYPE__": "FieldContent",
+				"value": "fairly",
+				"type": "Text"
+			},
+			"button_link": {
+				"key": "f5e7a6d4-fd47-47d4-a2b3-28f52992a9f4",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://twitter.com",
+					"text": "cry"
+				}
+			}
+		},
+		"items": []
+	}
+]

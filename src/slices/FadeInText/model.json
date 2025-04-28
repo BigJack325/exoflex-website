@@ -1,0 +1,28 @@
+{
+  "id": "fade_in_text",
+  "type": "SharedSlice",
+  "name": "FadeInText",
+  "description": "FadeInText",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "body": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Body",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,heading3,strong"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}
