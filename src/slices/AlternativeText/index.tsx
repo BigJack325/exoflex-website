@@ -1,6 +1,6 @@
 "use client"
 
-import { type FC, useRef, useState, useEffect } from "react"
+import { type FC, useRef, useState } from "react"
 import { asText, type Content } from "@prismicio/client"
 import { PrismicRichText, type SliceComponentProps } from "@prismicio/react"
 import { Bounded } from "@/components/Bounded"
@@ -8,6 +8,8 @@ import { View } from "@react-three/drei"
 import Scene from "./Scene"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useGSAP } from "@gsap/react"
+import { useStore } from "@/hooks/useStore"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -16,72 +18,80 @@ export type AlternativeTextProps = SliceComponentProps<Content.AlternativeTextSl
 const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeSection, setActiveSection] = useState<number | null>(null)
+  const ready = useStore((state) => state.ready)
 
-  const videoSources = ["/videos/video_exercices.mp4", "/videos/video_serrage.mp4", "/videos/video_structure.mp4"]
+  const videoSources = [
+    "/videos/video_exercices.mp4",
+    "/videos/video_serrage.mp4",
+    "/videos/video_structure.mp4"
+  ]
 
-  useEffect(() => {
-    const container = containerRef.current
-    const sections = container?.querySelectorAll(".alternating-section") || []
-    const triggers: ScrollTrigger[] = []
+  useGSAP(
+    () => {
+      const container = containerRef.current
+      const sections = container?.querySelectorAll(".alternating-section") || []
+      const triggers: ScrollTrigger[] = []
 
-    if (container && sections.length > 0) {
-      triggers.push(
-        ScrollTrigger.create({
-          trigger: container,
-          start: "top bottom",
-          end: "bottom top",
-          onLeave: () => setActiveSection(null),
-          onLeaveBack: () => setActiveSection(null),
-        })
-      )
-
-      sections.forEach((section, index) => {
-        const heading = section.querySelector(".heading-3d")
-        const body = section.querySelector(".body-3d")
-
+      if (container && sections.length > 0) {
         triggers.push(
           ScrollTrigger.create({
-            trigger: section,
-            start: "top 60%",
-            end: "bottom 40%",
-            onEnter: () => setActiveSection(index),
-            onEnterBack: () => setActiveSection(index),
+            trigger: container,
+            start: "top bottom",
+            end: "bottom top",
+            onLeave: () => setActiveSection(null),
+            onLeaveBack: () => setActiveSection(null),
           })
         )
 
-        const videoTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top 60%",
-            end: "bottom 40%",
-            scrub: true,
-          },
+        sections.forEach((section, index) => {
+          const heading = section.querySelector(".heading-3d")
+          const body = section.querySelector(".body-3d")
+
+          triggers.push(
+            ScrollTrigger.create({
+              trigger: section,
+              start: "top 60%",
+              end: "bottom 40%",
+              onEnter: () => setActiveSection(index),
+              onEnterBack: () => setActiveSection(index),
+            })
+          )
+
+          const videoTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: section,
+              start: "top 60%",
+              end: "bottom 40%",
+              scrub: true,
+            },
+          })
+
+          const textTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: section,
+              start: "top 50%",
+              end: "bottom 40%",
+              scrub: true,
+            },
+          })
+
+          textTl.fromTo(heading, { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power2.out" })
+          textTl.fromTo(body, { y: 50, opacity: 0 }, { y: 0, opacity: 0.9, duration: 1, ease: "power2.out" }, "<0.2")
+
+          textTl.to(heading, { y: -100, opacity: 0, duration: 1, ease: "power2.in" })
+          textTl.to(body, { y: -50, opacity: 0, duration: 1, ease: "power2.in" }, "<0.2")
+
+          triggers.push(videoTl.scrollTrigger!)
+          triggers.push(textTl.scrollTrigger!)
         })
-        
-        const textTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top 50%",
-            end: "bottom 40%",
-            scrub: true,
-          },
-        })
+      }
 
-        textTl.fromTo(heading, { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power2.out" })
-        textTl.fromTo(body, { y: 50, opacity: 0 }, { y: 0, opacity: 0.9, duration: 1, ease: "power2.out" }, "<0.2")
-
-        textTl.to(heading, { y: -100, opacity: 0, duration: 1, ease: "power2.in" })
-        textTl.to(body, { y: -50, opacity: 0, duration: 1, ease: "power2.in" }, "<0.2")
-
-        triggers.push(videoTl.scrollTrigger!)
-        triggers.push(textTl.scrollTrigger!)
-      })
-    }
-
-    return () => {
-      triggers.forEach((trigger) => trigger.kill())
-    }
-  }, [])
+      return () => {
+        triggers.forEach((trigger) => trigger.kill())
+      }
+    },
+    { dependencies: [ready], scope: containerRef, revertOnUpdate: true }
+  )
 
   return (
     <div ref={containerRef} className="relative text-white">

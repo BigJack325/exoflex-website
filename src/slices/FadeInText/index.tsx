@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { asText } from "@prismicio/client";
+import { useStore } from "@/hooks/useStore";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,31 +16,35 @@ export type FadeInTextProps = SliceComponentProps<Content.FadeInTextSlice>;
 const FadeInText: FC<FadeInTextProps> = ({ slice }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const wordsRef = useRef<HTMLDivElement>(null);
+  const ready = useStore((state) => state.ready);
 
-  useGSAP(() => {
-    if (!containerRef.current || !wordsRef.current) return;
+  useGSAP(
+    () => {
+      if (!containerRef.current || !wordsRef.current) return;
 
-    const words = gsap.utils.toArray<HTMLSpanElement>(
-      wordsRef.current.querySelectorAll(".fade-word")
-    );
+      const words = gsap.utils.toArray<HTMLSpanElement>(
+        wordsRef.current.querySelectorAll(".fade-word")
+      );
 
-    gsap.fromTo(
-      words,
-      { opacity: 0, y: 20 },
-      {
-        opacity: 1,
-        y: 0,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 70%",
-          end:   "25% 30%",
-          scrub: true,
-        },
-      }
-    );
-  }, []);
+      gsap.fromTo(
+        words,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 70%",
+            end: "25% 30%",
+            scrub: true,
+          },
+        }
+      );
+    },
+    { dependencies: [ready], scope: containerRef, revertOnUpdate: true }
+  );
 
   const splitWords = (text: string) =>
     text.split(" ").map((word, i) => (
