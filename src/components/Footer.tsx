@@ -81,7 +81,7 @@ export default function Footer() {
     >
       <div className="mx-auto flex max-w-screen-xl flex-col items-start gap-12 md:flex-row md:justify-between">
         <div className="w-full space-y-6 md:w-1/2">
-          <Image src="/images/logo.png" alt="ExoFlex logo" width={120} height={40} />
+          <Image src="/images/logo.png" alt="ExoFlex logo" width={120} height={40} className="hidden sm:block" />
 
           <div className="flex gap-4">
             <a
@@ -128,8 +128,7 @@ export default function Footer() {
         <div className="w-full space-y-2 text-sm text-white/80 md:w-1/2 md:text-right">
           <div>
             <p className="text-base font-semibold text-white">Address</p>
-            <p>2500 University Blvd, Sherbrooke</p>
-            <p>Montreal, Quebec J1N 3C6</p>
+            <p>1672 Rue de l’Islet, Quebec City, Quebec, G2K 2G6, Canada</p>
           </div>
 
           <div className="mt-4 space-y-1">
