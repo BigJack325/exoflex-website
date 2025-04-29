@@ -11,6 +11,7 @@ import { FiMonitor, FiLayout, FiActivity } from "react-icons/fi";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useStore } from "@/hooks/useStore";
+import { usePathname } from "next/navigation";
 
 export type InterfaceProps = SliceComponentProps<Content.InterfaceSlice>;
 
@@ -21,6 +22,7 @@ const Interface: FC<InterfaceProps> = ({ slice }) => {
   const featureCardsRef = useRef<HTMLDivElement>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const ready = useStore((state) => state.ready);
+  const pathname = usePathname();
 
   const menuItems = [
     {
@@ -82,7 +84,7 @@ const Interface: FC<InterfaceProps> = ({ slice }) => {
 
       return () => ctx.revert();
     },
-    { dependencies: [ready], scope: containerRef, revertOnUpdate: true }
+    { dependencies: [ready, pathname], scope: containerRef, revertOnUpdate: true }
   );
 
   const changeSlide = (index: number) => {

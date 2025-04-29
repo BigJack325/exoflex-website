@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { asText } from "@prismicio/client";
 import { useStore } from "@/hooks/useStore";
+import { usePathname } from "next/navigation";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,6 +18,7 @@ const FadeInText: FC<FadeInTextProps> = ({ slice }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const wordsRef = useRef<HTMLDivElement>(null);
   const ready = useStore((state) => state.ready);
+  const pathname = usePathname();
 
   useGSAP(
     () => {
@@ -43,7 +45,7 @@ const FadeInText: FC<FadeInTextProps> = ({ slice }) => {
         }
       );
     },
-    { dependencies: [ready], scope: containerRef, revertOnUpdate: true }
+    { dependencies: [ready, pathname], scope: containerRef, revertOnUpdate: true }
   );
 
   const splitWords = (text: string) =>

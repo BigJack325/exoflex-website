@@ -10,6 +10,7 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 import { useStore } from "@/hooks/useStore"
+import { usePathname } from "next/navigation"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -19,6 +20,7 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeSection, setActiveSection] = useState<number | null>(null)
   const ready = useStore((state) => state.ready)
+  const pathname = usePathname();
 
   const videoSources = [
     "/videos/video_exercices.mp4",
@@ -90,7 +92,7 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
         triggers.forEach((trigger) => trigger.kill())
       }
     },
-    { dependencies: [ready], scope: containerRef, revertOnUpdate: true }
+    { dependencies: [ready, pathname], scope: containerRef, revertOnUpdate: true }
   )
 
   return (
