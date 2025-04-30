@@ -4,7 +4,6 @@ import { useRef, useLayoutEffect, useState } from "react";
 import Image from "next/image";
 import { SiLinkedin, SiFacebook } from "react-icons/si";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePathname } from "next/navigation";
 
 export default function Footer() {
@@ -14,11 +13,6 @@ export default function Footer() {
   const pathname = usePathname();
 
   useLayoutEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    // kill any old trigger (in case this effect re-ran)
-    ScrollTrigger.getAll().forEach(t => t.kill());
-
     const ctx = gsap.context(() => {
       gsap.from(footerRef.current, {
         scrollTrigger: {
@@ -33,11 +27,7 @@ export default function Footer() {
       });
     }, footerRef);
 
-    ScrollTrigger.refresh();
-
-    return () => {
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, [pathname]);
 
   const portalId = "242121062";
@@ -67,7 +57,6 @@ export default function Footer() {
 
       setSubmitted(true);
       setEmail("");
-      // Retour à l’état initial après 4 s
       setTimeout(() => setSubmitted(false), 4000);
     } catch (err) {
       console.error("Network error:", err);

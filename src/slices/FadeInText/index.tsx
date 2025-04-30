@@ -4,13 +4,10 @@ import { FC, useRef } from "react";
 import { SliceComponentProps } from "@prismicio/react";
 import { Content } from "@prismicio/client";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { asText } from "@prismicio/client";
 import { useStore } from "@/hooks/useStore";
 import { usePathname } from "next/navigation";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export type FadeInTextProps = SliceComponentProps<Content.FadeInTextSlice>;
 

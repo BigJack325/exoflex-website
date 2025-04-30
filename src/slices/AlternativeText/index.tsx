@@ -30,11 +30,14 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
 
   useGSAP(
     () => {
-      const container = containerRef.current
-      const sections = container?.querySelectorAll(".alternating-section") || []
-      const triggers: ScrollTrigger[] = []
-
-      if (container && sections.length > 0) {
+      const container = containerRef.current;
+      if (!container) return;
+  
+      const ctx = gsap.context(() => {
+        const sections = container.querySelectorAll(".alternating-section");
+        const triggers: ScrollTrigger[] = [];
+  
+        // Reset on leave screen
         triggers.push(
           ScrollTrigger.create({
             trigger: container,
@@ -43,12 +46,12 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
             onLeave: () => setActiveSection(null),
             onLeaveBack: () => setActiveSection(null),
           })
-        )
-
+        );
+  
         sections.forEach((section, index) => {
-          const heading = section.querySelector(".heading-3d")
-          const body = section.querySelector(".body-3d")
-
+          const heading = section.querySelector(".heading-3d");
+          const body = section.querySelector(".body-3d");
+  
           triggers.push(
             ScrollTrigger.create({
               trigger: section,
@@ -57,8 +60,8 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               onEnter: () => setActiveSection(index),
               onEnterBack: () => setActiveSection(index),
             })
-          )
-
+          );
+  
           const videoTl = gsap.timeline({
             scrollTrigger: {
               trigger: section,
@@ -66,8 +69,8 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               end: "bottom 40%",
               scrub: true,
             },
-          })
-
+          });
+  
           const textTl = gsap.timeline({
             scrollTrigger: {
               trigger: section,
@@ -75,25 +78,41 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               end: "bottom 40%",
               scrub: true,
             },
-          })
-
-          textTl.fromTo(heading, { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power2.out" })
-          textTl.fromTo(body, { y: 50, opacity: 0 }, { y: 0, opacity: 0.9, duration: 1, ease: "power2.out" }, "<0.2")
-
-          textTl.to(heading, { y: -100, opacity: 0, duration: 1, ease: "power2.in" })
-          textTl.to(body, { y: -50, opacity: 0, duration: 1, ease: "power2.in" }, "<0.2")
-
-          triggers.push(videoTl.scrollTrigger!)
-          triggers.push(textTl.scrollTrigger!)
-        })
-      }
-
-      return () => {
-        triggers.forEach((trigger) => trigger.kill())
-      }
+          });
+  
+          if (heading && body) {
+            textTl.fromTo(
+              heading,
+              { y: 100, opacity: 0 },
+              { y: 0, opacity: 1, duration: 1, ease: "power2.out" }
+            );
+            textTl.fromTo(
+              body,
+              { y: 50, opacity: 0 },
+              { y: 0, opacity: 0.9, duration: 1, ease: "power2.out" },
+              "<0.2"
+            );
+  
+            textTl.to(
+              heading,
+              { y: -100, opacity: 0, duration: 1, ease: "power2.in" }
+            );
+            textTl.to(
+              body,
+              { y: -50, opacity: 0, duration: 1, ease: "power2.in" },
+              "<0.2"
+            );
+          }
+  
+          triggers.push(videoTl.scrollTrigger!);
+          triggers.push(textTl.scrollTrigger!);
+        });
+      }, containerRef); // Scoped cleanup
+  
+      return () => ctx.revert(); // clean and safe
     },
     { dependencies: [ready, pathname], scope: containerRef, revertOnUpdate: true }
-  )
+  );
 
   return (
     <div ref={containerRef} className="relative text-white">
