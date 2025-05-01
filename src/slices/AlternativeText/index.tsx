@@ -1,7 +1,7 @@
 "use client"
 
 import { type FC, useRef, useState } from "react"
-import { asText, type Content } from "@prismicio/client"
+import type { Content } from "@prismicio/client"
 import { PrismicRichText, type SliceComponentProps } from "@prismicio/react"
 import { Bounded } from "@/components/Bounded"
 import { View } from "@react-three/drei"
@@ -11,6 +11,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 import { useStore } from "@/hooks/useStore"
 import { usePathname } from "next/navigation"
+import { asText } from "@prismicio/client"
+import LazyVideo from "@/components/LazyVideo"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -20,7 +22,7 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeSection, setActiveSection] = useState<number | null>(null)
   const ready = useStore((state) => state.ready)
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   const videoSources = [
     "/videos/video_exercices.mp4",
@@ -28,16 +30,21 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
     "/videos/video_structure.mp4"
   ]
 
+  const posterSources = [
+    "/images/poster_exercices.jpg",
+    "/images/poster_serrage.jpg",
+    "/images/poster_structure.jpg"
+  ]
+
   useGSAP(
     () => {
-      const container = containerRef.current;
-      if (!container) return;
-  
+      const container = containerRef.current
+      if (!container) return
+
       const ctx = gsap.context(() => {
-        const sections = container.querySelectorAll(".alternating-section");
-        const triggers: ScrollTrigger[] = [];
-  
-        // Reset on leave screen
+        const sections = container.querySelectorAll(".alternating-section")
+        const triggers: ScrollTrigger[] = []
+
         triggers.push(
           ScrollTrigger.create({
             trigger: container,
@@ -46,12 +53,12 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
             onLeave: () => setActiveSection(null),
             onLeaveBack: () => setActiveSection(null),
           })
-        );
-  
+        )
+
         sections.forEach((section, index) => {
-          const heading = section.querySelector(".heading-3d");
-          const body = section.querySelector(".body-3d");
-  
+          const heading = section.querySelector(".heading-3d")
+          const body = section.querySelector(".body-3d")
+
           triggers.push(
             ScrollTrigger.create({
               trigger: section,
@@ -60,8 +67,8 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               onEnter: () => setActiveSection(index),
               onEnterBack: () => setActiveSection(index),
             })
-          );
-  
+          )
+
           const videoTl = gsap.timeline({
             scrollTrigger: {
               trigger: section,
@@ -69,8 +76,8 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               end: "bottom 40%",
               scrub: true,
             },
-          });
-  
+          })
+
           const textTl = gsap.timeline({
             scrollTrigger: {
               trigger: section,
@@ -78,41 +85,40 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               end: "bottom 40%",
               scrub: true,
             },
-          });
-  
+          })
+
           if (heading && body) {
             textTl.fromTo(
               heading,
               { y: 100, opacity: 0 },
               { y: 0, opacity: 1, duration: 1, ease: "power2.out" }
-            );
+            )
             textTl.fromTo(
               body,
               { y: 50, opacity: 0 },
               { y: 0, opacity: 0.9, duration: 1, ease: "power2.out" },
               "<0.2"
-            );
-  
+            )
             textTl.to(
               heading,
               { y: -100, opacity: 0, duration: 1, ease: "power2.in" }
-            );
+            )
             textTl.to(
               body,
               { y: -50, opacity: 0, duration: 1, ease: "power2.in" },
               "<0.2"
-            );
+            )
           }
-  
-          triggers.push(videoTl.scrollTrigger!);
-          triggers.push(textTl.scrollTrigger!);
-        });
-      }, containerRef); // Scoped cleanup
-  
-      return () => ctx.revert(); // clean and safe
+
+          triggers.push(videoTl.scrollTrigger!)
+          triggers.push(textTl.scrollTrigger!)
+        })
+      }, containerRef)
+
+      return () => ctx.revert()
     },
     { dependencies: [ready, pathname], scope: containerRef, revertOnUpdate: true }
-  );
+  )
 
   return (
     <div ref={containerRef} className="relative text-white">
@@ -131,40 +137,33 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               className="alternating-section relative flex flex-col md:grid h-screen gap-x-12 md:grid-cols-2 place-items-center overflow-hidden perspective-container"
               style={{ perspective: "1000px" }}
             >
-              {/* Video always visible */}
               <div
                 className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none transition-opacity duration-300"
                 style={{ opacity: activeSection === index ? 1 : 0 }}
               >
                 {activeSection === index && (
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-910 h-auto object-cover pointer-events-none transition-opacity duration-300"
-                    style={{
+                  <LazyVideo
+                    src={videoSources[index]}
+                    poster={posterSources[index]}
+                    className="absolute inset-0"
+                    videoClassName="w-910 h-auto object-cover"
+                    maskStyle={{
                       WebkitMaskImage: `
                         radial-gradient(circle at center, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0) 85%),
-                        linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)
-                      `,
+                        linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)`,
                       WebkitMaskComposite: "intersect",
                       maskImage: `
                         radial-gradient(circle at center, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0) 85%),
-                        linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)
-                      `,
+                        linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)`,
                       maskComposite: "intersect",
                       filter: "brightness(0.8) blur(0px)",
                       backdropFilter: "blur(50px)",
                       transition: "filter 0.5s ease-in-out",
                     }}
-                  >
-                    <source src={videoSources[index]} type="video/mp4" />
-                  </video>
+                  />
                 )}
               </div>
 
-              {/* Desktop text block (beside video) */}
               <div className={`${index % 2 === 0 ? "col-start-1" : "md:col-start-2"} hidden md:block relative text-content-wrapper`}>
                 <div className="transform-3d-container" style={{ transformStyle: "preserve-3d" }}>
                   <h2
@@ -188,7 +187,6 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
                 </div>
               </div>
 
-              {/* Mobile heading and body below video */}
               <div className="md:hidden z-10 flex flex-col items-center text-center px-6 mt-8">
                 <h2
                   className="text-4xl font-bold heading-3d mb-4"
@@ -217,4 +215,4 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
   )
 }
 
-export default AlternativeText
+export default AlternativeText;

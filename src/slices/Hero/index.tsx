@@ -8,8 +8,9 @@ import { PrismicRichText, type SliceComponentProps } from "@prismicio/react"
 import { Bounded } from "@/components/Bounded"
 import Button from "@/components/Button"
 import { TextSplitter } from "@/components/TextSplitter"
+import { useScreenType } from "@/hooks/useScreenType"
 
-const HeroVideo = dynamic(() => import("@/components/HeroVideo"), { ssr: false })
+const LazyVideo = dynamic(() => import("@/components/LazyVideo"), { ssr: false })
 
 export type HeroProps = SliceComponentProps<Content.HeroSlice>
 
@@ -18,10 +19,21 @@ const Hero: React.FC<HeroProps> = ({ slice }) => {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const subheadingRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLDivElement>(null)
+  const isMobile = useScreenType() === "mobile"
 
   return (
     <div ref={heroRef} className="relative h-screen overflow-hidden">
-      <HeroVideo />
+      <LazyVideo
+        src={isMobile ? "/videos/video_hero_mobile.mp4" : "/videos/video_hero_desktop.mp4"}
+        poster="/images/poster_hero.jpg"
+        className="absolute inset-0 -z-10"
+        videoClassName="w-full h-full object-cover"
+        maskStyle={{
+          WebkitMaskImage: "...",
+          maskImage: "...",
+          filter: "brightness(0.8) blur(0px)",
+        }}
+      />
 
       <div className="hero-overlay absolute inset-0 bg-black/20 z-[1]" />
 
