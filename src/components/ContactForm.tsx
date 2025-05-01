@@ -49,26 +49,26 @@ export default function ContactForm() {
       <div>
         <label htmlFor="email" className="block">Email *</label>
         <input id="email" name="email" type="email" required
-          className="mt-1 w-full rounded bg-white/10 p-2" />
+          className="mt-1 w-full rounded bg-white/15 p-2" />
       </div>
 
       {/* first & last name */}
       <div>
         <label htmlFor="firstname" className="block">First name</label>
         <input id="firstname" name="firstname" type="text"
-          className="mt-1 w-full rounded bg-white/10 p-2" />
+          className="mt-1 w-full rounded bg-white/15 p-2" />
       </div>
       <div>
         <label htmlFor="lastname" className="block">Last name</label>
         <input id="lastname" name="lastname" type="text"
-          className="mt-1 w-full rounded bg-white/10 p-2" />
+          className="mt-1 w-full rounded bg-white/15 p-2" />
       </div>
 
       {/* message */}
       <div>
         <label htmlFor="message" className="block">Message *</label>
         <textarea id="message" name="message" rows={4} required
-          className="mt-1 w-full rounded bg-white/10 p-2" />
+          className="mt-1 w-full rounded bg-white/15 p-2" />
       </div>
 
       {/* submit */}

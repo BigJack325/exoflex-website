@@ -27,13 +27,13 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
   const videoSources = [
     "/videos/video_exercices.mp4",
     "/videos/video_serrage.mp4",
-    "/videos/video_structure.mp4"
+    "/videos/video_structure.mp4",
   ]
 
   const posterSources = [
     "/images/poster_exercices.jpg",
     "/images/poster_serrage.jpg",
-    "/images/poster_structure.jpg"
+    "/images/poster_structure.jpg",
   ]
 
   useGSAP(
@@ -69,15 +69,6 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
             })
           )
 
-          const videoTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: section,
-              start: "top 60%",
-              end: "bottom 40%",
-              scrub: true,
-            },
-          })
-
           const textTl = gsap.timeline({
             scrollTrigger: {
               trigger: section,
@@ -109,9 +100,6 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               "<0.2"
             )
           }
-
-          triggers.push(videoTl.scrollTrigger!)
-          triggers.push(textTl.scrollTrigger!)
         })
       }, containerRef)
 
@@ -134,19 +122,20 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
           {slice.primary.text_group.map((item, index) => (
             <div
               key={asText(item.heading)}
-              className="alternating-section relative flex flex-col md:grid h-screen gap-x-12 md:grid-cols-2 place-items-center overflow-hidden perspective-container"
+              className="alternating-section relative flex flex-col md:grid min-h-screen gap-x-12 md:grid-cols-2 place-items-center overflow-hidden perspective-container"
               style={{ perspective: "1000px" }}
             >
+              {/* Desktop video background */}
               <div
-                className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none transition-opacity duration-300"
+                className="absolute inset-0 -z-10 hidden md:flex items-center justify-center pointer-events-none transition-opacity duration-300"
                 style={{ opacity: activeSection === index ? 1 : 0 }}
               >
-                {activeSection === index && (
+                <div className="w-full h-full flex justify-center items-center">
                   <LazyVideo
                     src={videoSources[index]}
                     poster={posterSources[index]}
                     className="absolute inset-0"
-                    videoClassName="w-910 h-auto object-cover"
+                    videoClassName="w-full h-full object-cover"
                     maskStyle={{
                       WebkitMaskImage: `
                         radial-gradient(circle at center, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0) 85%),
@@ -161,51 +150,34 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
                       transition: "filter 0.5s ease-in-out",
                     }}
                   />
-                )}
+                </div>
               </div>
 
-              <div className={`${index % 2 === 0 ? "col-start-1" : "md:col-start-2"} hidden md:block relative text-content-wrapper`}>
+              {/* Desktop text */}
+              <div className={`${index % 2 === 0 ? "col-start-1" : "md:col-start-2"} hidden md:block relative`}>
                 <div className="transform-3d-container" style={{ transformStyle: "preserve-3d" }}>
-                  <h2
-                    className="text-balance text-4xl md:text-5xl lg:text-6xl font-bold heading-3d"
-                    style={{
-                      transform: "translateZ(40px)",
-                      textShadow: "0 0 15px rgba(255, 255, 255, 0.3)",
-                    }}
-                  >
-                    {asText(item.heading)}
-                  </h2>
-                  <div
-                    className="mt-4 text-md md:text-lg lg:text-xl body-3d"
-                    style={{
-                      transform: "translateZ(0px)",
-                      opacity: 0.9,
-                    }}
-                  >
+                  <h2 className="text-balance text-3xl md:text-5xl lg:text-6xl font-bold heading-3d" style={{ transform: "translateZ(40px)", textShadow: "0 0 15px rgba(255, 255, 255, 0.3)" }}>{asText(item.heading)}</h2>
+                  <div className="mt-4 text-md md:text-lg lg:text-xl body-3d" style={{ transform: "translateZ(0px)", opacity: 0.9 }}>
                     <PrismicRichText field={item.body} />
                   </div>
                 </div>
               </div>
 
+              {/* Mobile: text first, video after */}
               <div className="md:hidden z-10 flex flex-col items-center text-center px-6 mt-8">
-                <h2
-                  className="text-4xl font-bold heading-3d mb-4"
-                  style={{
-                    transform: "translateZ(40px)",
-                    textShadow: "0 0 15px rgba(255, 255, 255, 0.3)",
-                  }}
-                >
-                  {asText(item.heading)}
-                </h2>
-                <div
-                  className="text-sm body-3d"
-                  style={{
-                    transform: "translateZ(0px)",
-                    opacity: 0.9,
-                  }}
-                >
+                <h2 className="text-2xl sm:text-3xl font-bold heading-3d mb-4" style={{ transform: "translateZ(40px)", textShadow: "0 0 15px rgba(255, 255, 255, 0.3)" }}>{asText(item.heading)}</h2>
+                <div className="text-sm body-3d mb-4" style={{ transform: "translateZ(0px)", opacity: 0.9 }}>
                   <PrismicRichText field={item.body} />
                 </div>
+
+                {activeSection === index && (
+                  <LazyVideo
+                    src={videoSources[index]}
+                    poster={posterSources[index]}
+                    className="w-full max-w-md aspect-video mt-4 rounded-xl overflow-hidden"
+                    videoClassName="w-full h-full object-contain"
+                  />
+                )}
               </div>
             </div>
           ))}

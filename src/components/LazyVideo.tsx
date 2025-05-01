@@ -19,7 +19,7 @@ export default function LazyVideo({
   poster,
   alt = "Video background",
   className = "absolute inset-0 overflow-hidden",
-  videoClassName = "w-full h-full object-cover",
+  videoClassName="w-full h-full object-contain mx-auto",
   maskStyle,
   zIndex = 0,
   priority = false
