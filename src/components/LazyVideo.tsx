@@ -61,14 +61,17 @@ export default function LazyVideo({
           <source src={src} type="video/mp4" />
         </video>
       ) : (
+      <div className="relative w-full aspect-video">
         <Image
           src={poster}
           alt={alt}
           fill
           priority={priority}
+          className="object-cover"
           sizes="100vw"
-          style={{ objectFit: "cover", ...maskStyle }}
+          style={maskStyle}
         />
+      </div>
       )}
     </div>
   )
