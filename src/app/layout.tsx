@@ -5,10 +5,6 @@ import MobileNav       from "@/components/MobileNav";
 import Footer          from "@/components/Footer";
 import ShowCanvasOnHome from "@/components/ShowCanvasOnHome";
 import localFont       from "next/font/local";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const alpino = localFont({
   src: "/fonts/Alpino-Variable.woff2",
