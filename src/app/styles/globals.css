@@ -4,7 +4,9 @@
 .text-black {
   color: #333333 !important;
 }
-
+body {
+  font-family: var(--font-tomato), sans-serif;
+}
 .text-white {
   color: #fefefd !important;
 }

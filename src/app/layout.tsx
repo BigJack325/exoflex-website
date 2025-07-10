@@ -1,16 +1,42 @@
 import { createClient } from "@/prismicio";
 import "@/app/styles/globals.css";
-import Header          from "@/components/Header";
-import MobileNav       from "@/components/MobileNav";
-import Footer          from "@/components/Footer";
+import Header from "@/components/Header";
+import MobileNav from "@/components/MobileNav";
+import Footer from "@/components/Footer";
 import ShowCanvasOnHome from "@/components/ShowCanvasOnHome";
-import localFont       from "next/font/local";
+import localFont from "next/font/local";
 
-const alpino = localFont({
-  src: "/fonts/Alpino-Variable.woff2",
+// Tomato Grotesk Full Family
+const tomatoGrotesk = localFont({
+  src: [
+    {
+      path: "/fonts/TomatoGrotesk-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "/fonts/TomatoGrotesk-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "/fonts/TomatoGrotesk-SemiBoldSlanted.woff2",
+      weight: "600",
+      style: "italic",
+    },
+    {
+      path: "/fonts/TomatoGrotesk-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "/fonts/TomatoGrotesk-Black.woff2",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+  variable: "--font-tomato",
   display: "swap",
-  weight: "100 900",
-  variable: "--font-alpino",
 });
 
 export default async function RootLayout({
@@ -18,23 +44,22 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const client   = createClient();
+  const client = createClient();
   const settings = await client.getSingle("settings");
 
   return (
     <html
       lang="en"
-      className={`${alpino.variable} scroll-smooth suppressHydrationWarning`}
+      className={`${tomatoGrotesk.variable} scroll-smooth suppressHydrationWarning`}
     >
       <head />
       <body className="relative overflow-x-hidden max-w-full min-h-screen bg-black text-white">
         <div
           id="initial-loader"
           className="fixed inset-0 z-50 flex items-center justify-center bg-black"
-        >
-        </div>
-        <ShowCanvasOnHome />
+        ></div>
 
+        <ShowCanvasOnHome />
         <Header items={settings.data.navigation} />
         <MobileNav items={settings.data.navigation} />
         {children}
