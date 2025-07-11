@@ -11,124 +11,17 @@ body {
   color: #fefefd !important;
 }
 
-/* Loading animations */
-@keyframes spin-slow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 8s linear infinite;
-}
-
-.animate-blink {
-  animation: blink 1.4s infinite;
-}
 @layer utilities {
-  .animate-spin-slow {
-    animation: spin 25s linear infinite;
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2s ease-in-out infinite;
-  }
-
-  .bg-gradient-radial {
-    background: radial-gradient(circle, var(--tw-gradient-stops));
-  }
-}
-
-/* Custom animations */
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes subtleGradientShift {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 100% 100%;
-  }
-}
-
-@keyframes flow-lines {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* Responsive adjustments for animations */
-@media (max-width: 640px) {
-  .animate-spin-slow {
-    animation-duration: 30s;
-  }
-}
-
-/* Glass morphism effect */
-.glass {
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Smooth transitions for all interactive elements */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow,
-    transform, filter, backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-
-@layer utilities {
-  /* Existing animations */
-  .animate-spin-slow {
-    animation: spin 25s linear infinite;
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2s ease-in-out infinite;
-  }
-
-  .bg-gradient-radial {
-    background: radial-gradient(circle, var(--tw-gradient-stops));
-  }
-
-  /* New animation for subtle background gradient shift */
-  @keyframes subtleGradientShift {
+  @keyframes spin-slow {
     0% {
-      background-position: 0% 0%;
+      transform: rotate(0deg);
     }
     100% {
-      background-position: 100% 100%;
+      transform: rotate(360deg);
     }
   }
 
-  /* New animation for flowing lines */
-  @keyframes flow-lines {
+  @keyframes shimmer {
     0% {
       transform: translateX(-100%);
     }
@@ -137,31 +30,17 @@ body {
     }
   }
 
-  /* Text glow effect */
-  .text-glow {
-    text-shadow: 0 0 8px rgba(59, 130, 246, 0.7), /* Blue glow */ 0 0 15px rgba(59, 130, 246, 0.4), 0 0 25px
-      rgba(59, 130, 246, 0.2);
-  }
-}
-
-/* Responsive adjustments for animations */
-@media (max-width: 640px) {
   .animate-spin-slow {
-    animation-duration: 30s;
+    animation: spin-slow 6s linear infinite;
   }
-}
 
-/* Glass morphism effect */
-.glass {
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background-size: 200% 100%;
+  }
 
-/* Smooth transitions for all interactive elements */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow,
-    transform, filter, backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  /* Already exists in Tailwind, but can be customized */
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
 }
