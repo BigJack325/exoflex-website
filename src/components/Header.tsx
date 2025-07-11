@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import MobileNav from "./MobileNav";
 import { usePathname } from "next/navigation";
 import { LinkField } from "@prismicio/client";
-import { useStore } from "@/hooks/useStore";
 
 type NavItem = { link: LinkField };
 
@@ -15,7 +14,6 @@ export default function Header({ items }: { items: NavItem[] }) {
   const [scrolled, setScrolled] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const pathname = usePathname();
-  const ready = useStore((state) => state.ready);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -28,14 +26,11 @@ export default function Header({ items }: { items: NavItem[] }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (!ready) {
-    return null;
-  }
 
   return (
     <header
       className={cn(
-        "pointer-events-none fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "pointer-events-none fixed inset-x-0 top-0 z-40 transition-all duration-300",
         scrolled
           ? "py-4 bg-black/80 bg-gradient-to-b backdrop-blur-md shadow-lg"
           : "py-4 bg-gradient-to-b from-black/50 to-transparent backdrop-blur-sm",
