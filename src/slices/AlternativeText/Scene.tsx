@@ -13,72 +13,113 @@ export default function Scene() {
   const protoRef = useRef<Group>(null);
   const screenType = useScreenType();
   const isMobile = screenType === "mobile";
-  const isTablet = screenType === "tablet";
 
-  const defaultY = isTablet ? -0.55 : -0.9;
   const defaultRotationY = 2.5;
-  const defaultScale = isTablet ? 1.5 : 2.5;
 
-  const animations = useMemo(() => [
-    { x: 0, y: -0.1, rotationY: 0, scale: 1 },
-    { x: 0.2, y: defaultY, rotationY: 3.8, scale: defaultScale },
-    { x: 0.65, y: defaultY + 0.2, rotationY: 6.2, scale: defaultScale * 0.6 },
-  ], [defaultY, defaultScale]);
+  const {
+    xOffset,
+    xOffset1,
+    xOffset2,
+    yOffset,
+    yOffset1,
+    yOffset2,
+    defaultScale,
+  } = useMemo(() => {
+    switch (screenType) {
+      case "tablet":
+        return {
+          xOffset: 0,
+          xOffset1: 0.1,
+          xOffset2: 0.4,
+          yOffset: -0.35,
+          yOffset1: -0.35,
+          yOffset2: -0.25,
+          defaultScale: 0.7,
+        };
+      case "laptop":
+        return {
+          xOffset: -0.1,
+          xOffset1: 0.1,
+          xOffset2: 0.6,
+          yOffset: -0.3,
+          yOffset1: -0.4,
+          yOffset2: -0.45,
+          defaultScale: 1,
+        };
+      case "desktop":
+      default:
+        return {
+          xOffset: 0,
+          xOffset1: 0,
+          xOffset2: 1,
+          yOffset: -0.8,
+          yOffset1: -0.9,
+          yOffset2: -0.7,
+          defaultScale: 1.7,
+        };
+    }
+  }, [screenType]);
 
-  const scrollTl = useRef<gsap.core.Timeline | null>(null);
+  const animations = useMemo(() => {
+    return [
+      { x: xOffset, y: yOffset, z: 0, rotationY: 0, scale: defaultScale }, // frame 0
+      { x: xOffset1, y: yOffset1, z: 0, rotationY: 3.8, scale: defaultScale }, // frame 1
+      { x: xOffset2, y: yOffset2, z: -2, rotationY: 6.2, scale: defaultScale }, // frame 2
+    ];
+  }, [xOffset, xOffset1, xOffset2, yOffset, yOffset1, yOffset2, defaultScale]);
 
-  useGSAP(() => {
-    if (!protoRef.current || isMobile) return;
+  useGSAP(
+    () => {
+      if (!protoRef.current || isMobile) return;
 
-    const sections = gsap.utils.toArray(".alternating-section");
-  
-    scrollTl.current?.scrollTrigger?.kill();
-    scrollTl.current?.kill();
-  
-    scrollTl.current = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".alternating-text-view",
-        endTrigger: ".alternating-text-container",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-        pin: true
-      },
-    });
-  
-    sections.forEach((section, index) => {
-      if (index === 0 || !protoRef.current) return;
-      const { x, y, rotationY, scale } = animations[index] || { x: 0, y: 0, rotationY: 0, scale: 1 };
-  
-      scrollTl.current!.to(protoRef.current.position, { x, duration: 0.5, ease: "circ.inOut" });
-      scrollTl.current!.to(protoRef.current.position, { y, duration: 0.5, ease: "circ.inOut" }, "<");
-      scrollTl.current!.to(protoRef.current.rotation, { y: rotationY, duration: 0.5, ease: "circ.inOut" }, "<");
-      scrollTl.current!.to(protoRef.current.scale, { x: scale, y: scale, z: scale, duration: 0.5, ease: "circ.inOut" }, "<");
-    });
-  
-    return () => {
-      scrollTl.current?.scrollTrigger?.kill();
-      scrollTl.current?.kill();
-      scrollTl.current = null;
-    };
-  }, [screenType, animations, isMobile]);
+      const sections = gsap.utils.toArray<HTMLElement>(".alternating-section");
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".alternating-text-view",
+          endTrigger: ".alternating-text-container",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+          pin: true,
+        },
+      });
+
+      sections.forEach((_, index) => {
+        if (index === 0 || !protoRef.current) return;
+        const { x, y, z, rotationY, scale } = animations[index] ?? animations[0];
+
+        tl.to(protoRef.current.position, { x, y, z, duration: 0.5, ease: "circ.inOut" });
+        tl.to(protoRef.current.rotation, { y: rotationY, duration: 0.5, ease: "circ.inOut" }, "<");
+        tl.to(
+          protoRef.current.scale,
+          { x: scale, y: scale, z: scale, duration: 0.5, ease: "circ.inOut" },
+          "<"
+        );
+      });
+    },
+    {
+      dependencies: [screenType, animations],
+      revertOnUpdate: true,
+    }
+  );
 
   useEffect(() => {
     if (protoRef.current) {
-      protoRef.current.position.set(0, defaultY, 0);
+      protoRef.current.position.set(xOffset, yOffset, 0);
       protoRef.current.rotation.set(0, defaultRotationY, 0);
-      protoRef.current.scale.set(defaultScale, defaultScale, defaultScale);
+      protoRef.current.scale.set(defaultScale, defaultScale, defaultScale); // ✅ Fixed
     }
-  }, [defaultY, defaultRotationY, defaultScale]);
+  }, [xOffset, yOffset, defaultRotationY, defaultScale]);
 
   if (isMobile) return null;
 
   return (
     <group
       ref={protoRef}
-      position={[0, defaultY+0.1, 0]}
+      position={[xOffset, yOffset, 0]}
       rotation={[0, defaultRotationY, 0]}
-      scale={[defaultScale, defaultScale, defaultScale]}
+      scale={[defaultScale, defaultScale, defaultScale]} // ✅ Fixed
     >
       <FloatingPrototype floatSpeed={1.2} />
       <Environment

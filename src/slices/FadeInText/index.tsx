@@ -8,6 +8,8 @@ import { useGSAP } from "@gsap/react";
 import { asText } from "@prismicio/client";
 import { useStore } from "@/hooks/useStore";
 import { usePathname } from "next/navigation";
+import { useScreenType } from "@/hooks/useScreenType";
+import { Bounded } from "@/components/Bounded";
 
 export type FadeInTextProps = SliceComponentProps<Content.FadeInTextSlice>;
 
@@ -16,6 +18,7 @@ const FadeInText: FC<FadeInTextProps> = ({ slice }) => {
   const wordsRef = useRef<HTMLDivElement>(null);
   const ready = useStore((state) => state.ready);
   const pathname = usePathname();
+  const screenType = useScreenType();
 
   useGSAP(
     () => {
@@ -31,43 +34,50 @@ const FadeInText: FC<FadeInTextProps> = ({ slice }) => {
         {
           opacity: 1,
           y: 0,
-          stagger: 0.1,
+          stagger: 0.12,
           ease: "power2.out",
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 70%",
-            end: "25% 30%",
+            start: "top 60%",
+            end: "60% 60%",
             scrub: true,
           },
         }
       );
     },
-    { dependencies: [ready, pathname], scope: containerRef, revertOnUpdate: true }
+    {
+      dependencies: [ready, pathname, screenType],
+      scope: containerRef,
+      revertOnUpdate: true,
+    }
   );
 
   const splitWords = (text: string) =>
     text.split(" ").map((word, i) => (
-      <span
-        key={i}
-        className="fade-word inline-block mr-1 opacity-0"
-      >
+      <span key={i} className="fade-word inline-block mr-[0.3ch] opacity-0">
         {word}
         <span>&nbsp;</span>
       </span>
     ));
 
   return (
-    <section
-      ref={containerRef}
-      className="min-h-screen flex items-center justify-center px-8 py-32 text-center"
+    <Bounded
+      data-slice-type={slice.slice_type}
+      data-slice-variation={slice.variation}
+      className="fade-in-text min-h-screen flex items-center justify-center px-8 text-center text-white"
     >
       <div
-        ref={wordsRef}
-        className="max-w-4xl text-m md:text-3xl lg:text-6xl font-extrabold leading-tight flex flex-wrap justify-center text-center"
+        ref={containerRef}
+        className="w-full flex items-center justify-center"
       >
-        {splitWords(asText(slice.primary.body))}
+        <div
+          ref={wordsRef}
+          className="max-w-4xl text-m md:text-3xl lg:text-6xl font-extrabold leading-tight flex flex-wrap justify-center text-justify"
+        >
+          {splitWords(asText(slice.primary.body))}
+        </div>
       </div>
-    </section>
+    </Bounded>
   );
 };
 

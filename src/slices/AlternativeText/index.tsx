@@ -11,6 +11,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 import { useStore } from "@/hooks/useStore"
 import { usePathname } from "next/navigation"
+import { useScreenType } from "@/hooks/useScreenType"
 import { asText } from "@prismicio/client"
 import LazyVideo from "@/components/LazyVideo"
 
@@ -23,6 +24,7 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
   const [activeSection, setActiveSection] = useState<number | null>(null)
   const ready = useStore((state) => state.ready)
   const pathname = usePathname()
+  const screenType = useScreenType()
 
   const videoSources = [
     "/videos/video_exercices.mp4",
@@ -41,71 +43,66 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
       const container = containerRef.current
       if (!container) return
 
-      const ctx = gsap.context(() => {
-        const sections = container.querySelectorAll(".alternating-section")
-        const triggers: ScrollTrigger[] = []
+      const sections = container.querySelectorAll(".alternating-section")
 
-        triggers.push(
-          ScrollTrigger.create({
-            trigger: container,
-            start: "top bottom",
-            end: "bottom top",
-            onLeave: () => setActiveSection(null),
-            onLeaveBack: () => setActiveSection(null),
-          })
-        )
+      ScrollTrigger.create({
+        trigger: container,
+        start: "top bottom",
+        end: "bottom top",
+        onLeave: () => setActiveSection(null),
+        onLeaveBack: () => setActiveSection(null),
+      })
 
-        sections.forEach((section, index) => {
-          const heading = section.querySelector(".heading-3d")
-          const body = section.querySelector(".body-3d")
+      sections.forEach((section, index) => {
+        const heading = section.querySelector(".heading-3d")
+        const body = section.querySelector(".body-3d")
 
-          triggers.push(
-            ScrollTrigger.create({
-              trigger: section,
-              start: "top 60%",
-              end: "bottom 40%",
-              onEnter: () => setActiveSection(index),
-              onEnterBack: () => setActiveSection(index),
-            })
-          )
-
-          const textTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: section,
-              start: "top 50%",
-              end: "bottom 40%",
-              scrub: true,
-            },
-          })
-
-          if (heading && body) {
-            textTl.fromTo(
-              heading,
-              { y: 100, opacity: 0 },
-              { y: 0, opacity: 1, duration: 1, ease: "power2.out" }
-            )
-            textTl.fromTo(
-              body,
-              { y: 50, opacity: 0 },
-              { y: 0, opacity: 0.9, duration: 1, ease: "power2.out" },
-              "<0.2"
-            )
-            textTl.to(
-              heading,
-              { y: -100, opacity: 0, duration: 1, ease: "power2.in" }
-            )
-            textTl.to(
-              body,
-              { y: -50, opacity: 0, duration: 1, ease: "power2.in" },
-              "<0.2"
-            )
-          }
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top 60%",
+          end: "bottom 40%",
+          onEnter: () => setActiveSection(index),
+          onEnterBack: () => setActiveSection(index),
         })
-      }, containerRef)
 
-      return () => ctx.revert()
+        const textTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 50%",
+            end: "bottom 40%",
+            scrub: true,
+          },
+        })
+
+        if (heading && body) {
+          textTl.fromTo(
+            heading,
+            { y: 100, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1, ease: "power2.out" }
+          )
+          textTl.fromTo(
+            body,
+            { y: 50, opacity: 0 },
+            { y: 0, opacity: 0.9, duration: 1, ease: "power2.out" },
+            "<0.2"
+          )
+          textTl.to(
+            heading,
+            { y: -100, opacity: 0, duration: 1, ease: "power2.in" }
+          )
+          textTl.to(
+            body,
+            { y: -50, opacity: 0, duration: 1, ease: "power2.in" },
+            "<0.2"
+          )
+        }
+      })
     },
-    { dependencies: [ready, pathname], scope: containerRef, revertOnUpdate: true }
+    {
+      scope: containerRef,
+      dependencies: [ready, pathname, screenType],
+      revertOnUpdate: true,
+    }
   )
 
   return (
@@ -157,7 +154,7 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               <div className={`${index % 2 === 0 ? "col-start-1" : "md:col-start-2"} hidden md:block relative`}>
                 <div className="transform-3d-container" style={{ transformStyle: "preserve-3d" }}>
                   <h2 className="text-balance text-3xl md:text-5xl lg:text-6xl font-bold heading-3d" style={{ transform: "translateZ(40px)", textShadow: "0 0 15px rgba(255, 255, 255, 0.3)" }}>{asText(item.heading)}</h2>
-                  <div className="mt-4 text-md md:text-lg lg:text-xl body-3d" style={{ transform: "translateZ(0px)", opacity: 0.9 }}>
+                  <div className="mt-4 text-md md:text-lg lg:text-xl body-3d text-justify" style={{ transform: "translateZ(0px)", opacity: 0.9 }}>
                     <PrismicRichText field={item.body} />
                   </div>
                 </div>
@@ -166,7 +163,7 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
               {/* Mobile: text first, video after */}
               <div className="md:hidden z-10 flex flex-col items-center text-center px-6 mt-8">
                 <h2 className="text-2xl sm:text-3xl font-bold heading-3d mb-4" style={{ transform: "translateZ(40px)", textShadow: "0 0 15px rgba(255, 255, 255, 0.3)" }}>{asText(item.heading)}</h2>
-                <div className="text-sm body-3d mb-4" style={{ transform: "translateZ(0px)", opacity: 0.9 }}>
+                <div className="text-sm body-3d mb-4 text-justify" style={{ transform: "translateZ(0px)", opacity: 0.9 }}>
                   <PrismicRichText field={item.body} />
                 </div>
 
@@ -187,4 +184,4 @@ const AlternativeText: FC<AlternativeTextProps> = ({ slice }) => {
   )
 }
 
-export default AlternativeText;
+export default AlternativeText

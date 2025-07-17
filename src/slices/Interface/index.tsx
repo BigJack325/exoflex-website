@@ -50,41 +50,41 @@ const Interface: FC<InterfaceProps> = ({ slice }) => {
 
   useGSAP(
     () => {
-      const ctx = gsap.context(() => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top bottom-=100",
-            end: "bottom top",
-            toggleActions: "play none none none",
-            once: true,
-          },
-          defaults: { ease: "power3.out" },
-        });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top bottom-=100",
+          end: "bottom top",
+          toggleActions: "play none none none",
+          once: true,
+        },
+        defaults: { ease: "power3.out" },
+      });
 
-        tl.to(containerRef.current, { opacity: 1, duration: 0.8 });
+      tl.to(containerRef.current, { opacity: 1, duration: 0.8 });
 
-        const headingWords = headingRef.current?.querySelectorAll(".interface-header-word");
-        if (headingWords) {
-          gsap.set(headingWords, { y: 100, opacity: 0 });
-          tl.to(headingWords, { y: 0, opacity: 1, stagger: 0.1, duration: 0.8 }, "-=0.4");
-        }
+      const headingWords = headingRef.current?.querySelectorAll(".interface-header-word");
+      if (headingWords) {
+        gsap.set(headingWords, { y: 100, opacity: 0 });
+        tl.to(headingWords, { y: 0, opacity: 1, stagger: 0.1, duration: 0.8 }, "-=0.4");
+      }
 
-        if (subheadingRef.current) {
-          gsap.set(subheadingRef.current, { y: 50, opacity: 0 });
-          tl.to(subheadingRef.current, { y: 0, opacity: 1, duration: 0.8 }, "-=0.4");
-        }
+      if (subheadingRef.current) {
+        gsap.set(subheadingRef.current, { y: 50, opacity: 0 });
+        tl.to(subheadingRef.current, { y: 0, opacity: 1, duration: 0.8 }, "-=0.4");
+      }
 
-        if (featureCardsRef.current) {
-          const cards = featureCardsRef.current.children;
-          gsap.set(cards, { y: 50, opacity: 0 });
-          tl.to(cards, { y: 0, opacity: 1, stagger: 0.15, duration: 0.8 }, "-=0.6");
-        }
-      }, containerRef);
-
-      return () => ctx.revert();
+      if (featureCardsRef.current) {
+        const cards = featureCardsRef.current.children;
+        gsap.set(cards, { y: 50, opacity: 0 });
+        tl.to(cards, { y: 0, opacity: 1, stagger: 0.15, duration: 0.8 }, "-=0.6");
+      }
     },
-    { dependencies: [ready, pathname], scope: containerRef, revertOnUpdate: true }
+    {
+      dependencies: [ready, pathname],
+      scope: containerRef,
+      revertOnUpdate: true,
+    }
   );
 
   const changeSlide = (index: number) => {
@@ -98,7 +98,10 @@ const Interface: FC<InterfaceProps> = ({ slice }) => {
       data-slice-variation={slice.variation}
       className="relative"
     >
-      <div ref={containerRef} className="min-h-screen w-full flex flex-col items-center justify-center text-center py-12 sm:py-16 md:py-24 px-4 sm:px-6">
+      <div
+        ref={containerRef}
+        className="min-h-screen w-full flex flex-col items-center justify-center text-center px-4 sm:px-6"
+      >
         {/* Heading */}
         <div className="mb-6 max-w-5xl w-full mx-auto">
           <h2
@@ -108,7 +111,7 @@ const Interface: FC<InterfaceProps> = ({ slice }) => {
             <TextSplitter text={asText(slice.primary.heading)} className="interface-header-word" />
           </h2>
           <div
-            className="mt-6 text-base sm:text-lg md:text-xl lg:text-2xl text-white max-w-4xl mx-auto"
+            className="mt-6 text-base sm:text-lg md:text-xl lg:text-2xl text-white max-w-4xl mx-auto text-justify"
             ref={subheadingRef}
           >
             <PrismicRichText field={slice.primary.subheading} />
@@ -176,7 +179,7 @@ const Interface: FC<InterfaceProps> = ({ slice }) => {
             >
               {item.icon}
               <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{item.title}</h3>
-              <div className="text-sm sm:text-base text-white/80">
+              <div className="text-sm sm:text-base text-white/80 text-justify">
                 <PrismicRichText field={item.description} />
               </div>
             </div>
