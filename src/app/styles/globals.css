@@ -117,9 +117,10 @@ body {
   color: var(--color-accent-ink);
 }
 
-.tnum {
-  font-variant-numeric: tabular-nums;
-}
+/* No tabular figures anywhere, on purpose. TomatoGrotesk's `tnum` set swaps in
+   a slashed zero (zero.tf), which read as a struck-through 0 in the 80 / 100 /
+   400 numerals, and the face has no unslashed tabular zero. The numerals run
+   proportional instead. */
 
 /* ── the film corridor ──────────────────────────────────────────────────────
    The page's cinematic register already exists twice — the hero's charcoal

@@ -100,7 +100,7 @@ const STEPS: Record<Lang, Step[]> = {
       n: "01",
       label: "Retour à domicile",
       heading: "Le quotidien se complique.",
-      body: "De retour à domicile, l'atteinte du membre supérieur reste. Les gestes à deux mains, comme cuisiner, porter ou verser, exigent des détours épuisants, et l'autonomie rétrécit.",
+      body: "De retour à domicile, l'atteinte du membre supérieur reste. Les gestes à deux mains, comme cuisiner, porter ou verser, exigent des détours épuisants, et l'autonomie diminue.",
       media: {
         kind: "video",
         src: "/videos/kitchen_without_v2.mp4",
@@ -180,7 +180,7 @@ const Journey: FC = () => {
               <div className="flex items-baseline gap-4" data-rise>
                 {/* the graphic tuning, not the darkened one: at --t-h3 this is
                     large type, where the brand blue itself is cleared to run */}
-                <span className="display tnum text-[length:var(--t-h3)] text-accent">
+                <span className="display text-[length:var(--t-h3)] text-accent">
                   {s.n}
                 </span>
                 <span className="label">{s.label}</span>
