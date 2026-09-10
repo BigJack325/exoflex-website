@@ -76,7 +76,9 @@ export function NumberTicker({
         // LOCAL CHANGE: upstream hardcodes `text-black dark:text-white`. This
         // site has no `dark` class, so black landed near-invisible on the ink
         // ground. Inherit instead, and let the caller own tracking.
-        "inline-block tabular-nums text-current",
+        // No tabular-nums either: TomatoGrotesk's tabular zero is slashed
+        // (see the note in globals.css).
+        "inline-block text-current",
         className
       )}
       {...props}

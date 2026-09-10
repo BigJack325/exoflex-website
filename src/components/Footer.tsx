@@ -33,7 +33,7 @@ const COPY = {
   fr: {
     contact: "Contact",
     emailSr: "Courriel",
-    basedIn: "Établis à",
+    basedIn: "Établie à",
     location: "Sherbrooke (Québec), Canada",
     legal: "Mentions légales",
     investigational: "Appareil expérimental",

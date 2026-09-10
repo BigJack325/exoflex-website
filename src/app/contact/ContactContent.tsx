@@ -17,7 +17,7 @@ const COPY = {
     title: "Amorcer la conversation.",
     sub: "Dites-nous quelle conversation vous voulez avoir et elle sera acheminée en conséquence. Les demandes cliniques se rendent à l'équipe qui mène les démonstrations.",
     email: "Courriel",
-    basedIn: "Établis à",
+    basedIn: "Établie à",
     location: "Sherbrooke (Québec), Canada",
   },
 } as const

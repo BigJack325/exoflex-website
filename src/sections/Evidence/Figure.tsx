@@ -43,7 +43,7 @@ export default function Figure({ value, prefix, unit }: Props) {
           className="inline-block tracking-[inherit] text-ink"
         />
       ) : (
-        <span className="tnum">{value}</span>
+        <span>{value}</span>
       )}
       {unit && <span className="text-[0.44em]">{unit}</span>}
     </>

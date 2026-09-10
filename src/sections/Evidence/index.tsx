@@ -263,7 +263,7 @@ export default function Evidence() {
               <dt data-rise className="label" style={{ maxWidth: "22ch" }}>
                 {f.label}
               </dt>
-              <dd data-rise className="m-0 display tnum text-[length:var(--t-num)] leading-none">
+              <dd data-rise className="m-0 display text-[length:var(--t-num)] leading-none">
                 <Figure value={f.value} prefix={f.prefix} unit={f.unit} />
               </dd>
             </div>

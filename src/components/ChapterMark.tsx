@@ -50,7 +50,7 @@ export default function ChapterMark({
             page. accent-ink and not accent because .label is caption-sized, and
             the graphic tuning is only cleared for large type. */}
         {index && (
-          <span aria-hidden="true" className="tnum mr-3 text-accent-ink">
+          <span aria-hidden="true" className="mr-3 text-accent-ink">
             ( {index} )
           </span>
         )}
