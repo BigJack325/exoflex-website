@@ -11,12 +11,11 @@ import type { Lang } from "@/lib/i18n"
  * Portrait notes:
  *  - Founders: 1024×1536 studio photos from the document.
  *  - Advisor portraits were supplied directly by the user for publication.
- *    Diana Zidarov added 2026-08 from the user-supplied OneDrive_2 folder (file
- *    named "Diana.png"). Sylvie Nadeau (2026-08-11) and Murielle Grangeon
- *    (2026-08-17) were removed at the user's request; their portraits are
- *    still in /images/team/advisors. Caution that still stands: some supplied
- *    portraits carry an AI-retouched finish (Diana's included) — confirm each
- *    person's sign-off before launch.
+ *    Sylvie Nadeau (2026-08-11), Murielle Grangeon (2026-08-17) and Diana
+ *    Zidarov (2026-10-26) were removed at the user's request; their portraits
+ *    are still in /images/team/advisors. Caution that still stands: some
+ *    supplied portraits carry an AI-retouched finish — confirm each person's
+ *    sign-off before launch.
  */
 export type Member = {
   firstName: string
@@ -34,7 +33,7 @@ export type Advisor = {
   org?: string
   role: Record<Lang, string>
   avatar: string
-  /** Public profile the card links to — LinkedIn for most, CRIR for Diana. */
+  /** Public profile the card links to (LinkedIn). */
   link?: string
 }
 
@@ -77,19 +76,19 @@ export const team: Member[] = [
   },
 ]
 
-/* Diana sits right after Cyril, and Catherine right after François Michaud,
-   because the pairs are meant to read side by side (2026-08-11). The grid is
-   4 columns on desktop and 2 from sm up, so the pairs must sit at positions
-   1-2 and 3-4 to hold at both widths — which pushed Drolet out of the lead
-   slot when Murielle Grangeon was removed (2026-08-17; her portrait stays in
-   /images/team/advisors). Alexandre Girard (added 2026-08-20) sits at
-   position 5 with Drolet closing the list at 6, so the last row is full at
-   every width. Inserting or removing an advisor shifts all of this: check the
-   pairs again whenever the list changes length.
+/* Catherine sits right after François Michaud because the pair is meant to
+   read side by side (2026-08-11). The grid is 4 columns on desktop and 2 from
+   sm up, so the pair must sit at positions 1-2 or 3-4 to hold at both widths.
+   Diana Zidarov, who paired with Cyril the same way, was removed 2026-10-26
+   (her portrait stays in /images/team/advisors); Alexandre Girard moved up to
+   position 2 so Michaud and Catherine stay at 3-4, with Drolet closing the
+   list at 5 — which leaves the last row one card short at every width.
+   Inserting or removing an advisor shifts all of this: check the pair again
+   whenever the list changes length.
 
-   Cyril and Diana's shared title (university professor, physiotherapy and
-   rehabilitation sciences, no IURDPM mention) is the user's wording
-   (2026-08-17), replacing the CRSNG/PSO roles. */
+   Cyril's title (university professor, physiotherapy and rehabilitation
+   sciences, no IURDPM mention) is the user's wording (2026-08-17), replacing
+   the CRSNG/PSO role. */
 export const advisors: Advisor[] = [
   {
     name: "Cyril Duclos",
@@ -100,20 +99,27 @@ export const advisors: Advisor[] = [
     avatar: "/images/team/advisors/cyril-duclos.jpg",
     link: "https://www.linkedin.com/in/cyril-duclos-10a20029/",
   },
+  /* Added 2026-08-20 at the user's request so the four university researchers
+     read as one block with the entrepreneur closing the list. Role verified
+     against the UdeS mechanical-engineering department page (hired for the
+     robotics engineering program; robotic arms and collaborative robotics for
+     mobility and care settings). Rank left off the card because it was not
+     verifiable there. Portrait generated from his LinkedIn photo — same
+     sign-off caution as the other retouched portraits. */
   {
-    name: "Diana Zidarov",
+    name: "Alexandre Girard",
+    org: "Université de Sherbrooke",
     role: {
-      en: "University professor, physiotherapy and rehabilitation sciences",
-      fr: "Professeure d'université en physiothérapie et sciences de la réadaptation",
+      en: "Professor, mechanical engineering and robotics",
+      fr: "Professeur, génie mécanique et robotique",
     },
-    avatar: "/images/team/advisors/diana-zidarov.jpg",
-    link: "https://crir.ca/member/diana-zidarov-pht-ph-d/",
+    avatar: "/images/team/advisors/alexandre-girard.jpg",
+    link: "https://www.linkedin.com/in/alx87grd/",
   },
   /* Confirmed by the user 2026-08-01 ("c'est françois michaud") — the
      grey-haired man in the checked shirt from the OneDrive_2 folder. Same
-     AI-retouched finish as the other "ChatGPT Image" portraits (Diana's
-     included, by finish): confirm sign-offs before launch. Role from the
-     CRSNG/PSO application. */
+     AI-retouched finish as the other "ChatGPT Image" portraits: confirm
+     sign-offs before launch. Role from the CRSNG/PSO application. */
   {
     name: "François Michaud",
     org: "Université de Sherbrooke",
@@ -133,23 +139,6 @@ export const advisors: Advisor[] = [
     },
     avatar: "/images/team/advisors/catherine-veronneau.jpg",
     link: "https://www.linkedin.com/in/catherine-v%C3%A9ronneau-7710a3140/",
-  },
-  /* Added 2026-08-20, placed before Drolet at the user's request so the four
-     university researchers read as one block with the entrepreneur closing the
-     list. Role verified against the UdeS mechanical-engineering department
-     page (hired for the robotics engineering program; robotic arms and
-     collaborative robotics for mobility and care settings). Rank left off the
-     card because it was not verifiable there. Portrait generated from his
-     LinkedIn photo — same sign-off caution as the other retouched portraits. */
-  {
-    name: "Alexandre Girard",
-    org: "Université de Sherbrooke",
-    role: {
-      en: "Professor, mechanical engineering and robotics",
-      fr: "Professeur, génie mécanique et robotique",
-    },
-    avatar: "/images/team/advisors/alexandre-girard.jpg",
-    link: "https://www.linkedin.com/in/alx87grd/",
   },
   {
     name: "François Drolet",
